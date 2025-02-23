@@ -1,0 +1,2 @@
+# Si-Tweak
+si-Tweak is a silent  payment indexer that helps both full nodes and light clients detect silent payment index by providing precomputed tweak data . This is the scalar of the hash of the inputs and sum of all public keys. 
