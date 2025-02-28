@@ -1,5 +1,5 @@
 #![allow(unused)]
-use rusqlite::{Connection,Result};
+use rusqlite::{Connection,Result,params};
 use crate::database::model::{Block,BlockScalar};
 
 pub struct Db {
@@ -13,9 +13,24 @@ impl Db {
         Ok(Db { conn })
         
     }
-    pub fn insert_block(){}
-    pub fn insert_scalars(){}
-    pub fn get_scalar_by_height(){}
+    pub fn insert_block(&self, block: &Block)-> Result<()> {
+        self.conn.execute(
+            "INSERT INTO blocks  (height, hash) VALUES (?1, ?2)", 
+            params![block.height,block.hash])?;
+
+            Ok(())
+
+    }
+
+    pub fn insert_scalars(&self,scalar: &BlockScalar)-> Result<()>{
+        self.conn.execute(
+            "INSERT INTO block_scalars (height,scalars) VALUES (?1, ?2",
+             params![scalar.height,scalar.scalars])?;
+             Ok(())
+    }
+    pub fn get_scalar_by_height(&self,height:i64){
+        
+    }
     pub fn get_scalar_by_hash(){}
 
 }
