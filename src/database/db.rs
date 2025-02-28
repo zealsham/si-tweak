@@ -28,8 +28,21 @@ impl Db {
              params![scalar.height,scalar.scalars])?;
              Ok(())
     }
-    pub fn get_scalar_by_height(&self,height:i64){
-        
+    pub fn get_scalar_by_height(&self,height:i64)-> Result<Option<BlockScalar>>{
+        let mut stmt = self.conn.prepare(
+            "SELECT id, height, scalars FROM block_scalars WHERE height = ?1"
+        )?;
+        let scalar_iter = stmt.query_map(params![height], |row| {
+            Ok(BlockScalar {
+                id: row.get(0)?,
+                height: row.get(1)?,
+                scalars: row.get(2)?,
+            })
+        })?;
+
+        let result = scalar_iter.collect::<Result<Vec<_>>>()?;
+        Ok(result.into_iter().next())
+
     }
     pub fn get_scalar_by_hash(){}
 
