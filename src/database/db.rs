@@ -7,8 +7,9 @@ pub struct Db {
 }
 
 impl Db {
-    pub fn new(&self, path: &str) -> Result<(Self)>{
+    pub fn new( path: &str) -> Result<(Self)>{
         let conn = Connection::open(path)?;
+        conn.execute("PRAGMA foreign_keys = ON;", [])?;
         init_database(&conn)?;
         Ok(Db { conn })
         
@@ -24,7 +25,7 @@ impl Db {
 
     pub fn insert_scalars(&self,scalar: &BlockScalar)-> Result<()>{
         self.conn.execute(
-            "INSERT INTO block_scalars (height,scalars) VALUES (?1, ?2",
+            "INSERT INTO block_scalars (height,scalars) VALUES (?1, ?2)",
              params![scalar.height,scalar.scalars])?;
              Ok(())
     }
@@ -44,7 +45,26 @@ impl Db {
         Ok(result.into_iter().next())
 
     }
-    pub fn get_scalar_by_hash(){}
+    pub fn get_scalar_by_hash(&self, hash: &[u8]) -> Result<Option<BlockScalar>> {
+        let mut stmt = self.conn.prepare(
+            "SELECT block_scalars.id, block_scalars.height, block_scalars.scalars 
+             FROM block_scalars
+             JOIN blocks ON block_scalars.height = blocks.height
+             WHERE blocks.hash = ?1"
+        )?;
+        
+        let scalar_iter = stmt.query_map(params![hash], |row| {
+            Ok(BlockScalar {
+                id: row.get(0)?,
+                height: row.get(1)?,
+                scalars: row.get(2)?,
+            })
+        })?;
+        
+        let result = scalar_iter.collect::<Result<Vec<_>>>()?;
+        Ok(result.into_iter().next())
+    }
+   
 
 }
 
