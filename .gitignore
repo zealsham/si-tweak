@@ -1,2 +1,4 @@
 target/
 test.json
+db.db
+config.yaml
