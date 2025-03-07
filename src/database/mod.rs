@@ -2,4 +2,4 @@
 pub mod model;
 pub mod db;
 
-pub use model::{Block,BlockScalar};
+//pub use model::{Block,BlockScalar};

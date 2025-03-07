@@ -2,19 +2,20 @@
 
 mod database;
 mod configuration;
-use configuration::load_config;
+mod indexer;
+use configuration::btc::load_config;
 
-use crate::database::{Block,BlockScalar,db};
+use database::{db,model};  
 
 fn main() {
-   /* let see = db::Db::new("./db.db").unwrap();
+   let see = db::Db::new("./db.db").unwrap();
     let hash =vec![0u8; 32];
-    let data = Block {
+    let data = model::Block {
         height: 1,
         hash: hash.clone()
     };
 
-    let scalar = BlockScalar{
+    let scalar = model::BlockScalar{
         id:0,
         height:1,
         scalars: hash
@@ -24,8 +25,8 @@ fn main() {
 
     see.insert_block(&data).expect("Failed to insert block");
     see.insert_scalars(&scalar).expect("Failed to insert scalar");
-    */
-    let configff =configuration::load_config("./config.yaml").unwrap();
+    
+    let configff =load_config("./config.yaml").unwrap();
     println!("{:?}",configff);
     
 }

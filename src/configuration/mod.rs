@@ -1,3 +1,2 @@
-pub mod configuration;
+pub mod btc;
 
-pub use configuration::{load_config};

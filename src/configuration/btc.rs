@@ -27,6 +27,8 @@ impl Default for  BitcoinNode {
     }
 }
 
+
+
 pub fn load_config(path: &str) -> Result<BitcoinNode> {
     let cfg = Config::builder().add_source(File::with_name(path).required(false))
     .build()?;
